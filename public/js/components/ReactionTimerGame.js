@@ -26,14 +26,14 @@ class ReactionTimerGame {
   }
 
   triggerRandomCell() {
-    for (let i = 1; i < 3; i += 1) {
-      const randomRowIndex = getRandomInt(0, NUM_ROWS);
-      const randomColIndex = getRandomInt(0, NUM_COLS);
-      if (this.activeCellRow === null) {
-        this.activeCellRow = randomRowIndex;
-        this.activeCellCol = randomColIndex;
-        this.view.activateCell(randomRowIndex, randomColIndex);
-      }
+    const randomRowIndex = getRandomInt(0, NUM_ROWS);
+    const randomColIndex = getRandomInt(0, NUM_COLS);
+    if (this.activeCellRow === null) {
+      this.activeCellRow = randomRowIndex;
+      this.activeCellCol = randomColIndex;
+      this.view.activateCell(randomRowIndex, randomColIndex);
+    }
+    if (this.activeSecondCellRow === null) {
       this.activeSecondCellRow = randomRowIndex;
       this.activeSecondCellCol = randomColIndex;
       this.view.activateCell(randomRowIndex, randomColIndex);
@@ -41,14 +41,13 @@ class ReactionTimerGame {
   }
 
   handleActiveCellSelected() {
-    if (this.activeCellRow) {
-      this.view.deactivateCell(this.activeCellRow, this.activeCellCol);
-      this.calculateTime();
-    }
-    if (this.activeSecondCellRow) {
-      this.view.deactivateCell(this.activeSecondCellRow, this.activeSecondCellCol);
-      this.calculateTime();
-    }
+    this.view.deactivateCell(this.activeCellRow, this.activeCellCol);
+    this.calculateTime();
+  }
+
+  handleActiveSecondCellSelected() {
+    this.view.deactivateCell(this.activeSecondCellRow, this.activeSecondCellCol);
+    this.calculateTime();
   }
 
   calculateTime() {
@@ -59,6 +58,7 @@ class ReactionTimerGame {
   init() {
     this.view = new ReactionTimerGridView();
     this.view.registerActiveCellSelectedCallback(this.handleActiveCellSelected.bind(this));
+    this.view.registerActiveCellSelectedCallback(this.handleActiveSecondCellSelected.bind(this));
     this.view.registerRoundStartCallback(this.handleRoundStart.bind(this));
 
     this.view.initDomAndListeners();
