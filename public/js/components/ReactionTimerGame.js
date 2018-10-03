@@ -11,6 +11,7 @@ class ReactionTimerGame {
     this.activeSecondCellCol = null;
     this.currentStartTime = null;
     this.currentEndTime = null;
+    this.countUp = 0;
   }
 
   handleRoundStart() {
@@ -26,39 +27,43 @@ class ReactionTimerGame {
   }
 
   triggerRandomCell() {
-    const randomRowIndex = getRandomInt(0, NUM_ROWS);
-    const randomColIndex = getRandomInt(0, NUM_COLS);
-    if (this.activeCellRow === null) {
-      this.activeCellRow = randomRowIndex;
-      this.activeCellCol = randomColIndex;
-      this.view.activateCell(randomRowIndex, randomColIndex);
-    }
-    if (this.activeSecondCellRow === null) {
-      this.activeSecondCellRow = randomRowIndex;
-      this.activeSecondCellCol = randomColIndex;
-      this.view.activateCell(randomRowIndex, randomColIndex);
-    }
+    this.activeCellRow = getRandomInt(0, NUM_ROWS);
+    this.activeCellCol = getRandomInt(0, NUM_COLS);
+    this.view.activateCell(this.activeCellRow, this.activeCellCol);
+    this.activeSecondCellRow = getRandomInt(0, NUM_ROWS);
+    this.activeSecondCellCol = getRandomInt(0, NUM_COLS);
+    this.view.activateCell(this.activeSecondCellRow, this.activeSecondCellCol);
   }
 
-  handleActiveCellSelected() {
-    this.view.deactivateCell(this.activeCellRow, this.activeCellCol);
+  handleActiveCellSelected(row, col) {
+    this.view.deactivateCell(row, col);
+    this.countUp += 1;
     this.calculateTime();
   }
 
-  handleActiveSecondCellSelected() {
-    this.view.deactivateCell(this.activeSecondCellRow, this.activeSecondCellCol);
-    this.calculateTime();
-  }
 
   calculateTime() {
     this.currentEndTime = new Date().getTime();
-    console.log(this.currentEndTime - this.currentStartTime);
+    const partition = '---';
+    const count = `${this.countUp}st reaction`;
+    const currentTime = this.currentEndTime - this.currentStartTime;
+    console.log(this.countUp === 2 ? `${count} ${currentTime}\n${partition}` : `${count} ${currentTime}`);
+    if (this.countUp === 2) {
+      this.countUp = 0;
+    }
+    // console.log(countUp);
+    // if (countUp % 2 !== 0) {
+    //   console.log(`${countUp}st reaction ${this.currentEndTime - this.currentStartTime}`);
+    //   countUp += 1;
+    // } else {
+    //   console.log(`${countUp}st reaction ${this.currentEndTime - this.currentStartTime}`);
+    //   countUp += 1;
+    // }
   }
 
   init() {
     this.view = new ReactionTimerGridView();
     this.view.registerActiveCellSelectedCallback(this.handleActiveCellSelected.bind(this));
-    this.view.registerActiveCellSelectedCallback(this.handleActiveSecondCellSelected.bind(this));
     this.view.registerRoundStartCallback(this.handleRoundStart.bind(this));
 
     this.view.initDomAndListeners();
