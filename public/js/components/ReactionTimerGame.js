@@ -51,14 +51,6 @@ class ReactionTimerGame {
     if (this.countUp === 2) {
       this.countUp = 0;
     }
-    // console.log(countUp);
-    // if (countUp % 2 !== 0) {
-    //   console.log(`${countUp}st reaction ${this.currentEndTime - this.currentStartTime}`);
-    //   countUp += 1;
-    // } else {
-    //   console.log(`${countUp}st reaction ${this.currentEndTime - this.currentStartTime}`);
-    //   countUp += 1;
-    // }
   }
 
   init() {
